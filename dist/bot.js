@@ -42,13 +42,13 @@ const dotenv = __importStar(require("dotenv"));
 dotenv.config({ path: __dirname + "./../.env" });
 const TOKEN = process.env.TOKEN || "";
 const PORT = +process.env.PORT || 3000;
-const users = [];
+const users = process.env.USERS.split(" ").map((item) => +item) || [];
 const bot = new node_telegram_bot_api_1.default(TOKEN, { polling: true });
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.post("/webhook", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { message } = req.body;
-    for (const id of [...new Set(users)]) {
+    for (const id of users) {
         yield bot.sendMessage(id, `TradingView Alert: ${message}`);
     }
     res.sendStatus(200);
@@ -57,7 +57,6 @@ app.listen(PORT, () => {
     console.log(`Server is running on ${PORT} port...`);
 });
 bot.onText(/\/start/, (msg) => {
-    users.push(msg.chat.id);
-    bot.sendMessage(msg.chat.id, "Welcome to my bot!");
+    bot.sendMessage(msg.chat.id, "Welcome to bot!");
 });
 //# sourceMappingURL=bot.js.map
