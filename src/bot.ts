@@ -13,10 +13,10 @@ const bot = new TelegramBot(TOKEN, { polling: true });
 const app = express();
 app.use(bodyParser.json());
 
-app.post("/webhook", (req: Request, res: Response) => {
+app.post("/webhook", async (req: Request, res: Response) => {
   const { message } = req.body as { message: string };
   for (const id of [...new Set(users)]) {
-    bot.sendMessage(id, `TradingView Alert: ${message}`);
+    await bot.sendMessage(id, `TradingView Alert: ${message}`);
   }
   res.sendStatus(200);
 });
